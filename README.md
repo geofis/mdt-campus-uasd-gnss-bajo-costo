@@ -3,7 +3,7 @@
 __José Ramón Martinez Batlle__
 jmartinez19\@uasd.edu.do
 
-- [Presentación de diapositivas](https://geofis.github.io/mdt-campus-uasd-gnss-bajo-costo/presentaciones/III-Congreso-IDI-XXIII-JIC-nov24.html). III Congreso Internacional de Investigación, <br> Desarrollo e Innovación (I+D+I) y XXIII Jornada de Investigación Científica. Universidad Autónoma de Santo Domingo (UASD). 19 al 21 de noviembre, 2024. Santo Domingo, República Dominicana.
+- [Presentación de diapositivas](https://geofis.github.io/mdt-campus-uasd-gnss-bajo-costo/presentaciones/III-Congreso-IDI-XXIII-JIC-nov24.html). III Congreso Internacional de Investigación, Desarrollo e Innovación (I+D+I) y XXIII Jornada de Investigación Científica. Universidad Autónoma de Santo Domingo (UASD). 19 al 21 de noviembre, 2024. Santo Domingo, República Dominicana.
 
 ## Resumen
 
