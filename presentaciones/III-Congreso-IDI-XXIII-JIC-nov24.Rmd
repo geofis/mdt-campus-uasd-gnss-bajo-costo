@@ -122,7 +122,8 @@ convert -density 300 -background white -alpha remove -alpha off -resize 1920x \
 
 ## ![](img/partes-peq.jpg){width=85%}
 
-## ![](img/cuatro-receptores-cuatro-antenas.jpg)
+## ![](img/cuatro-receptores-cuatro-antenas.jpg){width=90%}
+<small>Velocidad: <10 km/h, cada época separada, a lo sumo, por medio metro</small>
 
 ## ![](img/palo-antena-receptor-sw-maps-lefebure-en-terreno.jpg)
 
@@ -153,6 +154,14 @@ __"'Ta rota, pero eso no e' na'"__
 - Para la interpolación, se utilizaron ca. 90,000 soluciones fijas, pero se podían haber usado muchas más usando un criterio menos estricto.
 
 - La interpolación se realizó con splines multinivel utilizando funciones base (B-splines).
+
+## ![](img/nube-de-puntos.jpg)
+
+## ![](img/nube-de-puntos-zoom-1.jpg)
+
+## ![](img/nube-de-puntos-zoom-2.jpg)
+
+## ![](img/nube-de-puntos-zoom-3.jpg)
 
 ## ![](img/dtm.jpg)
 
