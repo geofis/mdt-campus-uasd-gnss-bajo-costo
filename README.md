@@ -1,1 +1,10 @@
-# mdt-campus-uasd-gnss-bajo-costo
+# Generación de un modelo digital del terreno en el Campus de la UASD utilizando receptores GNSS de bajo costo
+
+__José Ramón Martinez Batlle__
+jmartinez19\@uasd.edu.do
+
+- [Presentación de diapositivas](https://geofis.github.io/mdt-campus-uasd-gnss-bajo-costo/presentaciones/III-Congreso-IDI-XXIII-JIC-nov24.html). III Congreso Internacional de Investigación, <br> Desarrollo e Innovación (I+D+I) y XXIII Jornada de Investigación Científica. Universidad Autónoma de Santo Domingo (UASD). 19 al 21 de noviembre, 2024. Santo Domingo, República Dominicana.
+
+## Resumen
+
+Este estudio presenta la creación de un modelo digital del terreno (MDT) para el Campus de la Universidad Autónoma de Santo Domingo (UASD), utilizando receptores GNSS de bajo costo, como alternativa a métodos convencionales topográficos convencionales, o de teledetección y aerofotogrametría. La elevación, un dato crítico para diversos estudios, fue generada en este estudio a partir de datos capturados en dos experimentos separados, en los que se emplearon rovers GNSS multifrecuencia y multiconstelación en modo cinemático, transportados en vehículos en movimiento a baja velocidad y a pie. En el primer experimento, se utilizaron antenas activas no calibradas, y en el segundo, antenas con tecnología de supresión de multitrayecto y filtrado de interferencias. Los datos se colectaron a una frecuencia de muestreo 5 Hz y se generaron soluciones fijas en posproceso con distintas configuraciones para minimizar errores y falsos fijos. Las tasas de fijación superaron el 70% en ambos experimentos, con un rendimiento ligeramente superior en el experimento con antenas de supresión del efecto multitrayecto. Con las soluciones fijas se generaron nubes de puntos generadas, las cuales posteriormente fueron limpiadas y revisadas, tanto estadística como visualmente. Se aplicaron métodos de interpolación geoestadísticos y por splines para producir MDT con errores centimétricos a partir de las nubes de puntos. Este estudio demuestra que es posible generar modelos de alta precisión usando tecnología GNSS de bajo "armada en casa".

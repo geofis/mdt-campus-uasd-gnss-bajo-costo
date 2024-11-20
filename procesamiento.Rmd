@@ -1,0 +1,267 @@
+---
+title: "Generación de un modelo digital del terreno en el Campus de la UASD utilizando receptores GNSS de bajo costo"
+authors:
+  - name: \parbox[t]{10cm}{\centering José-Ramón Martínez-Batlle \\ \orcidlink{0000-0001-9924-0327}}
+    department: Facultad de Ciencias y Guakía Ambiente
+    affiliation: Universidad Autónoma de Santo Domingo (UASD)
+    location:  Santo Domingo, República Dominicana
+    email: jmartinez19@uasd.edu.do
+resumen: |
+  Resumen en español.
+# abstract: |
+#   Abstract in english.
+palabrasclave:
+  - procesamiento de datos GNSS
+keywords:
+  - GNSS data processing
+bibliography: references.bib
+csl: apa-es.csl
+lang: es
+output:
+  rticles::arxiv_article
+  # bookdown::html_document2
+editor_options: 
+  chunk_output_type: console
+always_allow_html: true
+header-includes:
+  \usepackage{orcidlink}
+  \usepackage{float}
+  \usepackage[all]{nowidow}
+  \usepackage[spanish]{babel}
+  \usepackage{pdflscape}
+  \renewcommand\spanishtablename{Tabla}
+  \usepackage{xcolor}
+  \usepackage{tabu}
+  \renewcommand\tablename{Tabla}
+  \renewcommand\figurename{Figura}
+  # \newcommand{\beginsupplement}{
+  #   \setcounter{table}{0}
+  #   \renewcommand{\thetable}{S\arabic{table}}
+  #   \renewcommand\tablename{Tabla}
+  #   \setcounter{figure}{0}
+  #   \renewcommand{\thefigure}{S\arabic{figure}}
+  #   \renewcommand\figurename{Figura}
+---
+
+## 20241117, recorrido a pie
+
+```{bash, eval=F}
+# Recorridos (modo de posicionamiento cinemático)
+cd 20241117-recorrido-a-pie/
+# Borrar mensajes de navegación por constelación
+ll -h ./*/*.24[CGLN] # Deben ser de kilobytes de tamaño
+rm ./*/*.24[CGLN]
+## Cambiar extensión de archivo de mensajes de navegación
+for i in ./*/*.24P; do mv "$i" "${i/.24P/.nav}"; done
+## Symlink archivo de la base
+cd rover
+ln -s ../base/*.24O base.24O
+## Symlink archivos .conf y .atx
+ln -s ../../archivos-aux-ppk/* .
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v1)
+# for i in 2024*.24O; do
+#     ppk -i 0.2 -c conf-cinetico-20241117-v1.conf \
+#     -r  $i \
+#     -b  base.24O \
+#     -n ${i/.24O/.nav} \
+#     -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+#     -H 1.847 -o all
+# done
+
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v2)
+# for i in 2024*.24O; do
+#     ppk -i 0.2 -c conf-cinetico-20241117-v2.conf \
+#     -r  $i \
+#     -b  base.24O \
+#     -n ${i/.24O/.nav} \
+#     -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+#     -H 1.847 -o all
+# done
+
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v3)
+# for i in 2024*.24O; do
+#     ppk -i 0.2 -c conf-cinetico-20241117-v3.conf \
+#     -r  $i \
+#     -b  base.24O \
+#     -n ${i/.24O/.nav} \
+#     -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+#     -H 1.847 -o all
+# done
+
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v4)
+# for i in 2024*.24O; do
+#     ppk -i 0.2 -c conf-cinetico-20241117-v4.conf \
+#     -r  $i \
+#     -b  base.24O \
+#     -n ${i/.24O/.nav} \
+#     -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+#     -H 1.847 -o all
+# done
+
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v5, base u-blox)
+# for i in 2024*.24O; do
+#     ppk -i 0.2 -c conf-cinetico-20241117-v5.conf \
+#     -r  $i \
+#     -b  base-ublox.24O \
+#     -n ${i/.24O/.nav} \
+#     -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+#     -H 1.847 -o all
+# done
+
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v6)
+for i in 2024*.24O; do
+    ppk -i 0.2 -c conf-cinetico-20241117-v6.conf \
+    -r  $i \
+    -b  base.24O \
+    -n ${i/.24O/.nav} \
+    -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+    -H 1.847 -o all
+done
+
+# Convertir las soluciones a CSV y GPKG
+ln -s /home/jose/Documentos/git/fotogrametria-fotos-historicas/tools/pos2csv* .
+for i in ppk*/*[0-9].pos; do ./pos2csv.sh $i; done
+
+# Consolidar las soluciones cinemáticas del día individuales en un único GeoPackage
+ogrmerge.py -overwrite_ds -single -skipfailures -f GPKG \
+  -o 20241117-soluciones-cinematicas.gpkg ppk*/*.gpkg
+
+## Si aplica, borrar soluciones (usar con cuidado, primero explorar con ls)
+# rm -r ppk-*
+## Borrar RINEX y log de errores (usar con cuidado, primero explorar con ls)
+# rm *.24O *.nav errors*.log
+```
+
+## 20241110, recorrido en carro, cuatro receptores, sólo dos usados
+
+```{bash, eval=F}
+# Recorridos (modo de posicionamiento cinemático)
+cd 20241110-recorrido-en-carro-cuatro-receptores-base/
+# Borrar mensajes de navegación por constelación
+ll -h ./*/*.24[CGLN] # Deben ser de kilobytes de tamaño
+# rm ./*/*.24[CGLN]
+## Cambiar extensión de archivo de mensajes de navegación
+for i in ./*/*.24P; do mv "$i" "${i/.24P/.nav}"; done
+## Symlink archivo de la base
+cd rover
+ln -s ../base/*.24O base.24O
+## Symlink archivos .conf y .atx
+ln -s ../../archivos-aux-ppk/conf-cinetico-20241110-v6.conf .
+ln -s ../../archivos-aux-ppk/*.atx
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v6 del caso anterior)
+for i in 2024*.24O; do
+    ppk -i 0.2 -c conf-cinetico-20241110-v6.conf \
+    -r  $i \
+    -b  base.24O \
+    -n ${i/.24O/.nav} \
+    -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+    -H 1.735 -o all
+done
+
+# Convertir las soluciones a CSV y GPKG
+ln -s /home/jose/Documentos/git/fotogrametria-fotos-historicas/tools/pos2csv* .
+for i in ppk*/*[0-9].pos; do ./pos2csv.sh $i; done
+
+# Consolidar las soluciones cinemáticas del día individuales en un único GeoPackage
+ogrmerge.py -overwrite_ds -single -skipfailures -f GPKG \
+  -o 20241110-soluciones-cinematicas.gpkg ppk*/*.gpkg
+
+## Si aplica, borrar soluciones (usar con cuidado, primero explorar con ls)
+# rm -r ppk-*
+## Borrar RINEX y log de errores (usar con cuidado, primero explorar con ls)
+# rm *.24O *.nav errors*.log
+```
+
+## 20241004, recorrido a pie
+
+```{bash, eval=F}
+# Recorridos (modo de posicionamiento cinemático)
+cd 20241004-recorrido-a-pie/
+# Borrar mensajes de navegación por constelación
+ll -h ./*/*.24[CGLN] # Deben ser de kilobytes de tamaño
+# rm ./*/*.24[CGLN]
+## Cambiar extensión de archivo de mensajes de navegación
+for i in ./*/*.24P; do mv "$i" "${i/.24P/.nav}"; done
+## Symlink archivo de la base
+cd rover
+ln -s ../base/*.obs base.24O
+## Symlink archivos .conf y .atx
+ln -s ../../archivos-aux-ppk/* .
+
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v6)
+for i in 2024*.24O; do
+    ppk -i 0.2 -c conf-cinetico-20241004-v6.conf \
+    -r  $i \
+    -b  base.24O \
+    -n ${i/.24O/.nav} \
+    -f TOPGNSS-GN-TK600.atx -t TPGGN+TK600 \
+    -H 1.847 -o all
+done
+
+# Convertir las soluciones a CSV y GPKG
+ln -s /home/jose/Documentos/git/fotogrametria-fotos-historicas/tools/pos2csv* .
+for i in ppk*/*[0-9].pos; do ./pos2csv.sh $i; done
+
+# Consolidar las soluciones cinemáticas del día individuales en un único GeoPackage
+ogrmerge.py -overwrite_ds -single -skipfailures -f GPKG \
+  -o 20241004-soluciones-cinematicas.gpkg ppk*/*.gpkg
+
+## Si aplica, borrar soluciones (usar con cuidado, primero explorar con ls)
+# rm -r ppk-*
+## Borrar RINEX y log de errores (usar con cuidado, primero explorar con ls)
+# rm *.24O *.nav errors*.log
+```
+
+## 20240806, recorrido en carro, dos receptores, sólo Unicore usado
+
+```{bash, eval=F}
+# Recorridos (modo de posicionamiento cinemático)
+cd 20240806-workflow-homogeneizado
+mkdir rover
+mkdir base
+cd base
+ln -s ../../20240806/2024-08-06_00-00-00_GNSS-1.* .
+cd ../rover
+ln -s ../../20240806/20240806-104052-unicore-nmea-data_219o.24* ,
+cd ..
+# Borrar mensajes de navegación por constelación
+ll -h ./*/*.24[CGLN] # Deben ser de kilobytes de tamaño
+# rm ./*/*.24[CGLN]
+## Cambiar extensión de archivo de mensajes de navegación
+for i in ./*/*.24P; do mv "$i" "${i/.24P/.nav}"; done
+## Symlink archivo de la base
+cd rover
+ln -s ../base/*.obs base.24O
+## Symlink archivos .conf y .atx
+ln -s ../../archivos-aux-ppk/conf-cinetico-20240806-v6.conf .
+## Aplicar posproceso (PPK) usando script propio (ppk) basado en rnx2rtkp (v6 del caso anterior)
+for i in 2024*.24O; do
+    ppk -i 0.2 -c conf-cinetico-20240806-v6.conf \
+    -r  $i \
+    -b  base.24O \
+    -n ${i/.24O/.nav} \
+    -H 1.715 -o all
+done
+
+# Convertir las soluciones a CSV y GPKG
+ln -s /home/jose/Documentos/git/fotogrametria-fotos-historicas/tools/pos2csv* .
+for i in ppk*/*[0-9].pos; do ./pos2csv.sh $i; done
+
+# Consolidar las soluciones cinemáticas del día individuales en un único GeoPackage
+ogrmerge.py -overwrite_ds -single -skipfailures -f GPKG \
+  -o 20240806-soluciones-cinematicas.gpkg ppk*/*.gpkg
+
+## Si aplica, borrar soluciones (usar con cuidado, primero explorar con ls)
+# rm -r ppk-*
+## Borrar RINEX y log de errores (usar con cuidado, primero explorar con ls)
+# rm *.24O *.nav errors*.log
+```
+
+## Unir GPKG
+
+```{bash, eval=F}
+cd ../..
+ogrmerge.py -overwrite_ds -single -skipfailures -f GPKG \
+  -o todas-soluciones-cinematicas.gpkg ./*/rover/*-soluciones-cinematicas.gpkg
+```
+

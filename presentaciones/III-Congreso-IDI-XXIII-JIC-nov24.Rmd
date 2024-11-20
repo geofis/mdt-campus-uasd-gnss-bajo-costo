@@ -1,0 +1,201 @@
+---
+title: "Generación de un modelo digital del terreno en el Campus de la UASD utilizando receptores GNSS de bajo costo"
+author: "<small> José Ramón Martínez Batlle, UASD (jmartinez19\\@uasd.edu.do)</small>"
+date: "III Congreso Internacional de Investigación, <br> Desarrollo e Innovación (I+D+I) <br> XXIII Jornada de Investigación Científica <br> <small> Universidad Autónoma de Santo Domingo (UASD) <br> 19 al 21 de noviembre, 2024 <br> Santo Domingo, República Dominicana </small> <br> <span style='font-size: 18px;'>https://geofis.github.io/mdt-campus-uasd-gnss-bajo-costo/presentaciones/III-Congreso-IDI-XXIII-JIC-nov24.html</span>"
+output:
+  revealjs::revealjs_presentation:
+    title-slide-attributes:
+      data-background-image: img/fondo.jpg
+      data-background-size: cover
+    template: defaultmodificada.html
+    transition: fade
+    css: estilos.css
+bibliography: ../references.bib
+csl: apa.csl
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, echo=F}
+knitr::opts_chunk$set(echo = FALSE)
+ruta_figuras <- 'img/'
+```
+
+# Objetivos
+
+- Realizar un modelo digital del terreno del campus de la UASD (Sede) usando tecnología GNSS.
+
+- Evaluar la metodología de colecta y procesamiento en modo cinemático para generar soluciones fijas de bajo error que produzcan una nube de puntos interpolables para generar el MDT.
+
+- Evaluar el rendimiento de distintas antenas de parche y de plato.
+
+# JUSTIFICACIÓN
+
+##
+
+- La __elevación precisa y de alta resolución, es difícil de obtener__, pero extremadamente necesario para infinidad de aplicaciones.
+
+- El equipamiento funcional _out of the box_ para obtenerlo es __extremadamente costoso__.
+
+- Enseñar y aprender (ambas cosas) tecnología GNSS __era un lujo__ reservado para unas pocas personas.
+
+##
+
+- Red __pública__ de CORS (estaciones de referencia de operación continua) de __muy poca densidad__.
+
+- __Existen redes privadas y densas__, pero de __costos__ elevados.
+
+- Predominio de __soluciones__ de software y hardware __cerradas__.
+
+## Las opciones.
+
+Si nuestro criterio de elección es la funcionalidad _out of the box_, las alternativas legales se parecen a estas (precios en USD) ...
+
+![](img/trimble-used.png){width=80%}
+
+## ![](img/emlid-base-rover.jpg)
+
+## ![](img/foif-base-rover.jpg)
+
+## ![](img/comnav-sinognss-base-rover.jpg)
+
+## ... o armamos nuestros propios receptores usando placas y módulos OEM ...
+
+![](img/ardusimple-mouser.jpg)
+
+## ![](img/unicore-um982.jpg)
+
+## ![](img/quectel-lg290.jpg)
+
+## ... y los operamos con software de código abierto y servicios gratuitos.
+
+![](img/rtkbase.jpg){width=55%}
+https://github.com/Stefal/rtkbase
+
+## ![](img/rtk2go.jpg){width=75%}
+http://rtk2go.com/
+
+## Aplicaciones
+
+* __APRENDER Y ENSEÑAR SIN MIEDO A TENER QUE EMPEÑAR UN RIÑÓN__.
+
+## ![](img/ensenar-aprender.jpg){width=50%}
+Fotos: Cinthia Vandepool y Edwin Fernández
+
+## ![](img/ensenar-aprender-2.jpg){width=60%}
+
+## Aplicaciones
+
+* Topografía y mensura.
+
+* Monitoreo de __la deformación del terreno (e.g. subsidencia), deslizamientos, fallas__.
+
+* Perfil de __playa__, sección transversal del __río__, apoyo a la hidráulica fluvial.
+
+* __Inventario preciso de seres vivos__, especialmente de plantas.
+
+* Corrección en el procesamiento __fotogramétrico y de datos LiDAR__.
+
+## Aplicaciones
+
+* Construcción, monitoreo de __edificaciones y estructuras__ (puentes).
+
+* __Agricultura__ de precisión.
+
+* Detección de __tsunamis__ por boyas GNSS.
+
+* Sistemas de __transporte__, vehículos autónomos.
+
+* Sistemas de cartografía __móviles__ (Street View).
+
+* El "etc." es bastante extenso.
+
+# MATERIALES Y MÉTODOS
+
+```{bash, eval=F, include=F, echo=F}
+convert -density 300 -background white -alpha remove -alpha off -resize 1920x \
+  presentaciones/img/metodologia-grafica.pdf \
+  presentaciones/img/metodologia-grafica.jpg
+```
+
+## ![](img/metodologia-grafica.jpg)
+
+## ![](img/partes-peq.jpg){width=85%}
+
+## ![](img/cuatro-receptores-cuatro-antenas.jpg)
+
+## ![](img/palo-antena-receptor-sw-maps-lefebure-en-terreno.jpg)
+
+## ![](img/base-propia-base-movil.jpg){width=45%}
+
+## ![](img/base-sigcart.jpg)
+http://rtk2go.com:2101/SNIP::MOUNTPT?NAME=geofis_mbase
+
+## ![](img/ta-rota-pero-eso-no-e-na.jpg){width=75%}
+__"'Ta rota, pero eso no e' na'"__
+
+<small>Foto: Saderis Carmona</small>
+
+# RESULTADOS
+
+## ![](img/base-sigcart-2-dias-nrcan-csrs-ppp.jpg)
+<small>Posición de la base según CSRS-PPP de NRCan. Los datos enviados con una tasa de muestreo de 30 segundos, pero la base colectó una época cada segundo para proveer correcciones RTCM y permitir soluciones RTK (éstas últimas no usadas, sólo para comprobar funcionalidad del motor interno de los módulos en terreno)</small>
+
+## ![](img/muestra-visibilidad-satelites-5-hz.jpg)
+<small>En rovers, una época cada 0.2 segundos, frecuencia de muestreo de 5 Hz</small>
+
+## ![](img/snr-multipath.jpg)
+
+## Soluciones fijas
+
+- Un cuarto de millón de soluciones FIX, de las que, usando un criterio extremadamente conservador, basado en el umbral 5 para la razón entre los residuos al cuadrado de la segunda mejor solución y la mejor solución.
+
+- Para la interpolación, se utilizaron ca. 90,000 soluciones fijas, pero se podían haber usado muchas más usando un criterio menos estricto.
+
+- La interpolación se realizó con splines multinivel utilizando funciones base (B-splines).
+
+## ![](img/dtm.jpg)
+
+## ![](img/dtm-zoom-1.jpg)
+
+## ![](img/dtm-zoom-2.jpg)
+
+# DISCUSIÓN
+
+- Se alcanzaron los objetivos propuestos inicialmente, y un poco más. 
+
+- Se evaluó el error usando soluciones de ocupaciones estáticas anteriores realizadas en el BM ALMA y en el localizado frente a la rotonda de la FIA, y las diferencias fueron apenas centimétricas.
+
+- La metodología empleada es idónea para la producción de cartografía topográfica precisa.
+
+- Las antenas de plato mostraron un rendimiento ligeramente mejor que las de parche.
+
+## Desafíos futuros
+
+- Clasificar nube de puntos.
+
+- Añadir cámara para fotogrametría terrestre.
+
+- Añadir más recorridos en las áreas próximas a edificaciones, controlando el efecto multitrayecto.
+
+- Visitar áreas que, por encontrarse en uso (e.g. play de softball), no pudieron cubrirse.
+
+## Desafíos futuros
+
+- Desarrollar el mismo flujo de trabajo con compensación por inclinación y acelaración, así como con receptores de doble antena.
+
+- Realizar más ocupaciones estáticas de larga duración en distintos puntos del campus.
+
+- Instalar más bases en el campus. Son bienvenidas las colaboraciones, pero sospecho que sólo serán fructíferas aquellas en las que el/la interesado/a se apropia de su propio proceso de confección y, especialmente, del mantenimiento.
+
+#
+
+<section style="font-size: 72px; text-align: center;">
+
+<br>
+
+<img src="img/email-icon.png" style="display: inline-block; vertical-align: middle;" width="48"/> jmartinez19\@uasd.edu.do
+
+<img src="img/gh-icon.png" style="display: inline-block; vertical-align: middle;" width="48"/> geofis
+
+</section>
